@@ -17,7 +17,7 @@ import java.util.*;
 public class Auction {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "id", nullable = false, updatable = false)
     private UUID id;
 
     @Column(name = "title", nullable = false, length = 150)
@@ -77,6 +77,7 @@ public class Auction {
         }
 
         Auction auction = new Auction();
+        auction.id = UUID.randomUUID();
         auction.title = Objects.requireNonNull(title, "Title cannot be null");
         auction.itemDescription = itemDescription;
         auction.startingPrice = startingPrice;

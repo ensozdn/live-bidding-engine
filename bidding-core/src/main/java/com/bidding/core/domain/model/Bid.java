@@ -19,7 +19,7 @@ import java.util.UUID;
 public class Bid {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "id", nullable = false, updatable = false)
     private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -40,6 +40,7 @@ public class Bid {
      * Teklif sadece Auction Aggregate Root'u aracılığıyla yaratılabilir.
      */
     Bid(Auction auction, UUID bidderId, BigDecimal amount, Instant createdAt) {
+        this.id = UUID.randomUUID();
         this.auction = Objects.requireNonNull(auction, "Auction cannot be null");
         this.bidderId = Objects.requireNonNull(bidderId, "Bidder ID cannot be null");
         this.amount = Objects.requireNonNull(amount, "Amount cannot be null");

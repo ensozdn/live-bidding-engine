@@ -9,7 +9,7 @@ spring:
   # PostgreSQL & HikariCP Configuration
   # ----------------------------------------------------------------------------
   datasource:
-    url: jdbc:postgresql://localhost:5432/bidding_db
+    url: jdbc:postgresql://localhost:5433/bidding_db
     username: postgres
     password: postgrespassword
     driver-class-name: org.postgresql.Driver
