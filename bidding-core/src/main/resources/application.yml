@@ -1,0 +1,58 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: bidding-core
+
+  # ----------------------------------------------------------------------------
+  # PostgreSQL & HikariCP Configuration
+  # ----------------------------------------------------------------------------
+  datasource:
+    url: jdbc:postgresql://localhost:5432/bidding_db
+    username: postgres
+    password: postgrespassword
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      pool-name: BiddingHikariCP
+
+  # ----------------------------------------------------------------------------
+  # JPA & Hibernate Configuration
+  # ----------------------------------------------------------------------------
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        use_sql_comments: true
+        jdbc:
+          batch_size: 25
+        order_inserts: true
+        order_updates: true
+
+  # ----------------------------------------------------------------------------
+  # Apache Kafka Producer Configuration
+  # ----------------------------------------------------------------------------
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      acks: all
+      retries: 3
+      properties:
+        enable.idempotence: true
+
+# ----------------------------------------------------------------------------
+# Logging: Görselleştirmek için SQL ve SQL Parametre Logları
+# ----------------------------------------------------------------------------
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.orm.jdbc.bind: TRACE
+    com.bidding.core: DEBUG
