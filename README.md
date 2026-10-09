@@ -1,4 +1,4 @@
-# Real-Time Live Bidding Engine ⚡️🔨
+# Real-Time Live Bidding Engine 
 
 Mikroservis mimarisi ve event-driven omurga üzerinde inşa edilen yüksek trafikli Canlı Açık Artırma Platformu (Live Bidding Engine).
 
