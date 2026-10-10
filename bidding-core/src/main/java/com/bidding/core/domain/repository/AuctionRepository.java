@@ -23,4 +23,15 @@ public interface AuctionRepository extends JpaRepository<Auction, UUID> {
      */
     @Query("SELECT DISTINCT a FROM Auction a LEFT JOIN FETCH a.bids WHERE a.id = :id")
     Optional<Auction> findByIdWithBids(@Param("id") UUID id);
+
+    /**
+     * Arka plan güvenlik ağı (Reconciliation Job) için:
+     * Süresi dolmuş ancak sunucu çökmesi/yeniden başlaması nedeniyle ENDED yapılmamış
+     * ACTIVE açık artırmaları bulur.
+     */
+    @Query("SELECT a FROM Auction a WHERE a.status = :status AND a.endTime <= :now")
+    java.util.List<Auction> findExpiredActiveAuctions(
+            @Param("status") com.bidding.core.domain.model.AuctionStatus status,
+            @Param("now") java.time.Instant now
+    );
 }

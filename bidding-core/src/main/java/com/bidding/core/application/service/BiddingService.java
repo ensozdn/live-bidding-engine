@@ -23,6 +23,7 @@ import java.util.UUID;
 public class BiddingService {
 
     private final AuctionRepository auctionRepository;
+    private final com.bidding.core.application.worker.AuctionExpirationWorker auctionExpirationWorker;
 
     /**
      * Yeni açık artırma oluşturur.
@@ -43,16 +44,17 @@ public class BiddingService {
     }
 
     /**
-     * Açık artırmayı başlatır.
-     * DİKKAT: Burada 'save()' çağrılmıyor! Hibernate Dirty Checking devrede.
+     * Açık artırmayı başlatır ve arka plan işçisini (ScheduledThreadPool) tetikler.
      */
     @Transactional
     public AuctionResponse startAuction(UUID auctionId) {
         log.info("Starting auction: {}", auctionId);
         Auction auction = getAuctionOrThrow(auctionId);
         auction.start(Instant.now());
-        // @Transactional metodu bittiğinde Hibernate Dirty Checking yaparak
-        // statü değişikliğini otomatik olarak UPDATE sorgusuyla DB'ye basar!
+
+        // MULTITHREADING: Bitiş süresi için arka plan işçisine zamanlama kaydı girilir
+        auctionExpirationWorker.scheduleAuctionExpiration(auction.getId(), auction.getEndTime());
+
         return AuctionResponse.from(auction);
     }
 
