@@ -24,6 +24,7 @@ public class BiddingService {
 
     private final AuctionRepository auctionRepository;
     private final com.bidding.core.application.worker.AuctionExpirationWorker auctionExpirationWorker;
+    private final com.bidding.core.infrastructure.kafka.AuctionEventProducer auctionEventProducer;
 
     /**
      * Yeni açık artırma oluşturur.
@@ -77,6 +78,17 @@ public class BiddingService {
 
         // Aggregate Root üzerinden invariant korumalı teklif verme
         Bid newBid = auction.placeBid(request.bidderId(), request.amount(), Instant.now());
+
+        // ASENKRON HABERLEŞME: Kafka omurgasına event fırlatılır (Non-blocking)
+        auctionEventProducer.publishBidPlacedEvent(
+                com.bidding.core.domain.event.BidPlacedEvent.of(
+                        auction.getId(),
+                        newBid.getId(),
+                        newBid.getBidderId(),
+                        newBid.getAmount(),
+                        auction.getVersion()
+                )
+        );
 
         // Dirty checking: Transaction commit anında Hibernate hem auctions tablosunu
         // güncelleyecek hem de CascadeType.ALL sayesinde bids tablosuna insert atacak!

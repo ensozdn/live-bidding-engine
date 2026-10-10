@@ -47,6 +47,7 @@ spring:
       retries: 3
       properties:
         enable.idempotence: true
+        spring.json.add.type.headers: false
 
 # ----------------------------------------------------------------------------
 # Logging: Görselleştirmek için SQL ve SQL Parametre Logları

@@ -17,6 +17,7 @@ import java.util.UUID;
 public class AuctionLifecycleService {
 
     private final AuctionRepository auctionRepository;
+    private final com.bidding.core.infrastructure.kafka.AuctionEventProducer auctionEventProducer;
 
     /**
      * SPRING PROXY & AOP DİKKATİ:
@@ -41,6 +42,15 @@ public class AuctionLifecycleService {
             auction.end(Instant.now());
             log.info("Auction {} status successfully transitioned to ENDED by thread [{}] (Highest Bidder: {}, Final Price: {})",
                     auctionId, threadName, auction.getHighestBidderId(), auction.getCurrentPrice());
+
+            // ASENKRON HABERLEŞME: Açık artırma sonlanma event'i Kafka'ya fırlatılır
+            auctionEventProducer.publishAuctionEndedEvent(
+                    com.bidding.core.domain.event.AuctionEndedEvent.of(
+                            auction.getId(),
+                            auction.getHighestBidderId(),
+                            auction.getCurrentPrice()
+                    )
+            );
         } else {
             log.info("Auction {} is already in status: {}. Skipping expiration.", auctionId, auction.getStatus());
         }
