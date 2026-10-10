@@ -1,0 +1,21 @@
+{
+  "name": "realtime-gateway",
+  "version": "1.0.0",
+  "description": "Real-Time Live Bidding Engine - Telemetry & WebSocket Gateway",
+  "main": "src/main.ts",
+  "scripts": {
+    "dev": "tsx watch src/main.ts",
+    "test:mongo": "tsx test/mongo.test.ts"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "kafkajs": "^2.2.4",
+    "mongoose": "^8.9.5",
+    "socket.io": "^4.8.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.7",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.3"
+  }
+}
