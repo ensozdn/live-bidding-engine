@@ -5,7 +5,8 @@
   "main": "src/main.ts",
   "scripts": {
     "dev": "tsx watch src/main.ts",
-    "test:mongo": "tsx test/mongo.test.ts"
+    "test:mongo": "tsx test/mongo.test.ts",
+    "test:e2e": "tsx test/e2e-realtime.test.ts"
   },
   "dependencies": {
     "dotenv": "^16.4.7",
@@ -15,6 +16,7 @@
   },
   "devDependencies": {
     "@types/node": "^22.10.7",
+    "socket.io-client": "^4.8.4",
     "tsx": "^4.19.2",
     "typescript": "^5.7.3"
   }
